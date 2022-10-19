@@ -9,6 +9,6 @@ Quick and simple project showcasing
 
 -NodeJs
 
-## You can check it out live: rps.czarnowskijakub.tech
+## You can check it out live [Here](rps.czarnowskijakub.tech)
 
 Might spice it up a little more, that's it for now.
