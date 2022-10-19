@@ -23,8 +23,9 @@ jobs:
 
       - name: npm install, build, and test
         run: |
+          cd backend
           npm install
-          npm run build --if-present
+          npm run build-ts --if-present
           npm run test --if-present
 
       - name: Upload artifact for deployment job
@@ -53,4 +54,4 @@ jobs:
           app-name: 'rps-websockets'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B92EACF685BB48709783E69506F0D275 }}
-          package: .
+          package: backend
