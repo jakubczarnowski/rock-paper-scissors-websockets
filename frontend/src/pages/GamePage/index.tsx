@@ -1,5 +1,5 @@
 import { Box, Button, Circle, Fade, Flex, Spinner, Text, theme, useColorModeValue, useInterval, useToast } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import Error from "../../components/Error";
 import HandBox from "../../components/HandBox";
@@ -22,8 +22,22 @@ const GamePage = (props: Props) => {
 	const game = useGame(id || "");
 	const handsColor = useColorModeValue(theme.colors.gray[800], theme.colors.white);
 	const toast = useToast();
-	console.log(game);
-	const frontendDomain = process.env.FRONTEND_DOMAIN || "http://localhost:3000/";
+	useEffect(() => {
+		if (game.opponentRequestedRematch) {
+			toast({
+				position: "top",
+				title: "Your opponent has requested a rematch!",
+				description: "Click here to accept",
+				status: "info",
+				duration: 9000,
+				isClosable: true,
+			});
+		} else {
+			toast.closeAll();
+		}
+	}, [game.opponentRequestedRematch]);
+
+	const frontendDomain = process.env.REAT_APP_FRONTEND_DOMAIN || "http://localhost:3000/";
 	const inviteLink = frontendDomain + "game/" + (id || "xd");
 	switch (game.roomState) {
 		case GameRoomStates.LOADING:
@@ -39,26 +53,8 @@ const GamePage = (props: Props) => {
 	}
 	return (
 		<>
-			{game.opponentRequestedRematch && (
-				<Box
-					onClick={() => {
-						game.requestRematch();
-						toast.closeAll();
-					}}
-				>
-					{toast({
-						position: "top",
-						title: "Your opponent has requested a rematch!",
-						description: "Click here to accept",
-						status: "info",
-						duration: 9000,
-						isClosable: true,
-					})}
-				</Box>
-			)}
-
 			<Flex flex={1} flexDirection="column" justifyContent="space-between" align="center" pt={{ md: 6 }}>
-				<HandFight opponent isOpponentReady={game.isOpponentReady} playerHand={game.opponentHand} />
+				<HandFight opponent isOpponentReady={game.isOpponentReady} playerHand={game.opponentHand} gameResult={game.gameResult} />
 				<Flex flex={1} flexDir="column" justifyContent="space-between" align="center" py={4}>
 					<Text fontSize={[12, 16, 20]} fontWeight="bold">
 						{game.opponentScore}
@@ -75,7 +71,7 @@ const GamePage = (props: Props) => {
 					<Text fontWeight="bold">{game.playerScore}</Text>
 				</Flex>
 
-				<HandFight playerHand={game.playerHand} />
+				<HandFight playerHand={game.playerHand} gameResult={game.gameResult} />
 			</Flex>
 			<Flex flex={0} mb={[2]} mt={[4, 8]} align="center" justify="center">
 				<HandBox onClick={() => game.setHand(Hands.ROCK)}>

@@ -2,7 +2,9 @@ import { Text, Circle } from "@chakra-ui/layout";
 import { Flex, Spinner, theme, useColorModeValue } from "@chakra-ui/react";
 import GameState from "../../types/GameState";
 import Hands from "../../types/Hands";
-import PlayerHand from "./PlayerHand";
+import PaperHand from "../HandSvgs/PaperHand";
+import RockHand from "../HandSvgs/RockHand";
+import ScissorsHand from "../HandSvgs/ScissorsHand";
 
 interface Props {
 	opponent?: boolean;
@@ -14,30 +16,11 @@ interface Props {
 const HandFight = ({ playerHand, opponent, isOpponentReady, gameResult }: Props) => {
 	const handsColor = useColorModeValue(theme.colors.gray[800], theme.colors.white);
 
-	const getFillColor = () => {
-		if (opponent) {
-			switch (gameResult) {
-				case GameState.WIN:
-					return "#ff0000";
-				case GameState.LOSE:
-					return "#00ff00";
-				case GameState.DRAW:
-					return "#0000ff";
-				case GameState.PLAYING:
-					return handsColor;
-			}
-		} else {
-			switch (gameResult) {
-				case GameState.WIN:
-					return "#00ff00";
-				case GameState.LOSE:
-					return "#ff0000";
-				case GameState.DRAW:
-					return "#0000ff";
-				case GameState.PLAYING:
-					return handsColor;
-			}
-		}
+	const fillColor = {
+		[GameState.WIN]: opponent ? "#ff0000" : "#00ff00",
+		[GameState.LOSE]: opponent ? "#00ff00" : "#ff0000",
+		[GameState.DRAW]: "#0000ff",
+		[GameState.PLAYING]: handsColor,
 	};
 
 	const OpponentHand = () =>
@@ -74,10 +57,22 @@ const HandFight = ({ playerHand, opponent, isOpponentReady, gameResult }: Props)
 			size={opponent ? ["140px", "200px", "250px"] : ["120px", "160px", "200px"]}
 			borderWidth={[2, 3, 5]}
 			p={[3, 5]}
-			borderColor={getFillColor()}
+			borderColor={fillColor[gameResult || "WIN"]}
 		>
 			{opponent ? <OpponentHand /> : <Hand />}
 		</Circle>
+	);
+};
+
+const PlayerHand = ({ hand }: { hand: Hands }) => {
+	const handsColor = useColorModeValue(theme.colors.gray[800], theme.colors.white);
+
+	return (
+		<>
+			{hand === Hands.ROCK && <RockHand fill={handsColor} />}
+			{hand === Hands.PAPER && <PaperHand fill={handsColor} stroke={handsColor} />}
+			{hand === Hands.SCISSORS && <ScissorsHand fill={handsColor} stroke={handsColor} />}
+		</>
 	);
 };
 

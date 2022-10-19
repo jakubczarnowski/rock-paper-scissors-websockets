@@ -5,8 +5,8 @@ import GameState from "../types/GameState";
 import Hands from "../types/Hands";
 import { getWinner } from "../utils";
 
-const backendDomain = process.env.BACKEND_DOMAIN || "http://localhost:4000/";
-console.log(process.env.BACKEND_DOMAIN);
+const backendDomain = process.env.REACT_APP_BACKEND_DOMAIN || "http://localhost:4000/";
+console.log(process.env.REACT_APP_BACKEND_DOMAIN);
 const socket = io(backendDomain, { autoConnect: false });
 const useGame = (roomId: string) => {
 	const [roomState, setRoomState] = useState(GameRoomStates.LOADING);
@@ -29,11 +29,7 @@ const useGame = (roomId: string) => {
 		setPlayerHand(hand);
 		socket.emit("user:setHand", hand);
 	};
-	useEffect(() => {
-		if (opponentHand !== Hands.NONE) {
-			setGameResult(getWinner(playerHand, opponentHand));
-		}
-	}, [opponentHand]);
+
 	const requestRematch = () => {
 		if (rematchRequested) {
 			return;
@@ -52,6 +48,11 @@ const useGame = (roomId: string) => {
 		setRoomState(GameRoomStates.PLAYING);
 	};
 	useEffect(() => {
+		if (opponentHand !== Hands.NONE) {
+			setGameResult(getWinner(playerHand, opponentHand));
+		}
+	}, [opponentHand]);
+	useEffect(() => {
 		if (!socket.connected) socket.connect();
 		socket.emit("user:connecting", roomId);
 
@@ -67,9 +68,6 @@ const useGame = (roomId: string) => {
 	}, [playerHand, isOpponentReady]);
 
 	useEffect(() => {
-		console.log("+!");
-		console.log(gameResult);
-		console.log(playerHand, opponentHand);
 		if (gameResult === GameState.WIN) {
 			setPlayerScore((prev) => prev + 1);
 			return;
@@ -124,6 +122,8 @@ const useGame = (roomId: string) => {
 			socket.off("room:playRematch");
 			socket.off("room:opponentReady");
 			socket.off("server:error");
+			socket.off("player:playerHand");
+			socket.off("player:opponentHand");
 		};
 	}, []);
 	return {

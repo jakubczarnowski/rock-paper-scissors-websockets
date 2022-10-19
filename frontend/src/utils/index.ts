@@ -19,8 +19,6 @@ export const getWinner = (playerHand: Hands, opponentHand: Hands) => {
 			[Hands.ROCK]: GameState.LOSE,
 		},
 	};
-	console.log(winningCondition);
-	console.log(playerHand, opponentHand);
 
 	return winningCondition[playerHand]?.[opponentHand] || GameState.DRAW;
 };
