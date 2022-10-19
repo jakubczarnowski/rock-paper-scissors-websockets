@@ -11,6 +11,7 @@ import InviteLink from "../../components/InviteLink";
 import Loading from "../../components/Loading";
 import RoomFull from "../../components/RoomFull";
 import UserLeft from "../../components/UserLeft";
+import useAppToast from "../../hooks/useAppToast";
 import useGame from "../../hooks/useGame";
 import GameRoomStates from "../../types/GameRoomStates";
 import Hands from "../../types/Hands";
@@ -21,21 +22,13 @@ const GamePage = (props: Props) => {
 	const { id } = useParams<{ id: string }>();
 	const game = useGame(id || "");
 	const handsColor = useColorModeValue(theme.colors.gray[800], theme.colors.white);
-	const toast = useToast();
-	useEffect(() => {
-		if (game.opponentRequestedRematch) {
-			toast({
-				position: "top",
-				title: "Your opponent has requested a rematch!",
-				description: "Click here to accept",
-				status: "info",
-				duration: 9000,
-				isClosable: true,
-			});
-		} else {
-			toast.closeAll();
-		}
-	}, [game.opponentRequestedRematch]);
+	const toast = useAppToast({
+		title: "Your opponent has requested a rematch!",
+		description: "Click rematch to accept",
+		type: "info",
+		on: game.opponentRequestedRematch,
+		equals: true,
+	});
 
 	const frontendDomain = process.env.REACT_APP_FRONTEND_DOMAIN || "http://localhost:3000/";
 	const inviteLink = frontendDomain + "game/" + (id || "xd");
