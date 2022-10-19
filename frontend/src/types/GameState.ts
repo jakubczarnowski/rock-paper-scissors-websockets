@@ -1,7 +1,7 @@
 enum GameState {
-	WIN,
-	LOSE,
-	DRAW,
-	PLAYING,
+	WIN = "WIN",
+	LOSE = "LOSE",
+	DRAW = "DRAW",
+	PLAYING = "PLAYING",
 }
 export default GameState;

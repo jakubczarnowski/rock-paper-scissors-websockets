@@ -11,5 +11,6 @@ export interface IGameContext {
 	playerScore: number;
 	opponentScore: number;
 	rematchRequested: boolean;
+	opponentRequestedRematch: boolean;
 	playRematch: () => void;
 }

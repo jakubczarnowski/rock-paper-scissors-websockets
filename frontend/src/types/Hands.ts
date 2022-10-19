@@ -1,7 +1,7 @@
 enum Hands {
-	ROCK,
-	PAPER,
-	SCISSORS,
-	NONE,
+	ROCK = "ROCK",
+	PAPER = "PAPER",
+	SCISSORS = "SCISSORS",
+	NONE = "NONE",
 }
 export default Hands;

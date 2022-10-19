@@ -1,18 +1,17 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import AppTheme from "./chakra/AppTheme";
 import Layout from "../layout/Layout";
-import GameProvider from "./GameProvider/GameProvider";
 import RouterProvider from "./router";
+import theme from "./chakra/AppTheme";
 
 type Props = {};
 
 const Providers = (props: Props) => {
 	return (
 		<ChakraProvider theme={AppTheme}>
+			<ColorModeScript initialColorMode={theme.config.initialColorMode} />
 			<Layout>
-				<GameProvider>
-					<RouterProvider />
-				</GameProvider>
+				<RouterProvider />
 			</Layout>
 		</ChakraProvider>
 	);
