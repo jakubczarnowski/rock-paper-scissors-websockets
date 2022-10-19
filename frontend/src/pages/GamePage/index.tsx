@@ -37,7 +37,7 @@ const GamePage = (props: Props) => {
 		}
 	}, [game.opponentRequestedRematch]);
 
-	const frontendDomain = process.env.REAT_APP_FRONTEND_DOMAIN || "http://localhost:3000/";
+	const frontendDomain = process.env.REACT_APP_FRONTEND_DOMAIN || "http://localhost:3000/";
 	const inviteLink = frontendDomain + "game/" + (id || "xd");
 	switch (game.roomState) {
 		case GameRoomStates.LOADING:
