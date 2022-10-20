@@ -5,18 +5,19 @@ type Props = {
 	onClick: () => void;
 };
 const HandBox = ({ children, onClick }: Props) => {
-	const handsColor = useColorModeValue(theme.colors.gray[800], theme.colors.white);
+	const handsColor = useColorModeValue(theme.colors.blackAlpha[200], theme.colors.blackAlpha[400]);
 
 	return (
 		<Square
+			maxWidth={"30%"}
 			onClick={onClick}
-			size={["90px", "140px", "200px"]}
-			p={[2, 3, 5]}
+			p={5}
 			cursor="pointer"
-			borderWidth={[2, 3, 5]}
-			borderColor={handsColor}
-			borderRadius={[30, 40, 50]}
-			_hover={{ _active: { transform: "scale(0.9)" } }}
+			borderWidth={4}
+			bgColor={handsColor}
+			borderColor={"black"}
+			borderRadius={"2xl"}
+			_hover={{ transform: "scale(105%)", transition: "0.5s" }}
 		>
 			{children}
 		</Square>

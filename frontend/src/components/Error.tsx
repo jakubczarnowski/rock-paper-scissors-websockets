@@ -9,10 +9,10 @@ const Error = (props: Props) => {
 	const navigate = useNavigate();
 	return (
 		<PageWrapper column>
-			<Text fontSize={32} fontWeight="bold">
+			<Text variant={"basic"} fontWeight="bold">
 				Something went wrong.
 			</Text>
-			<Text fontSize={32}>Try again with new game!</Text>
+			<Text variant="basic">Try again with new game!</Text>
 			<Button onClick={() => navigate("/")}>Click to play again</Button>
 		</PageWrapper>
 	);

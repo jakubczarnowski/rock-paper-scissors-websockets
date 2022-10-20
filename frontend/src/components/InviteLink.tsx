@@ -7,28 +7,28 @@ type Props = {
 };
 
 const InviteLink = ({ link }: Props) => {
-	const handsColor = useColorModeValue(theme.colors.gray[800], theme.colors.white);
+	const currentColor = useColorModeValue(theme.colors.black, theme.colors.white);
 	const { hasCopied, onCopy } = useClipboard(link);
 	return (
 		<PageWrapper column>
 			<Tooltip
-				label={hasCopied ? "Copied!" : "Click to copy!"}
-				fontSize={[12, 18, 24]}
-				p={[2, null, 4]}
-				arrowSize={16}
-				borderRadius={["xl", null, "3xl"]}
-				offset={[0, 16]}
+				label={hasCopied ? "Check Your Clipboard!" : "Copy to clipboard!"}
+				fontSize={"1.6rem"}
+				p={3}
+				arrowSize={20}
+				borderRadius={"3xl"}
+				mb={2}
 				isOpen
 				hasArrow
 				placement="top"
 			>
 				<Input
-					maxW={950}
-					p={[0, 2, 8]}
+					maxW={{ sm: "100%", md: "60%" }}
+					p={8}
 					readOnly={true}
-					borderColor={handsColor}
-					borderWidth={[1, 2, 4]}
-					fontSize={[11, 16, 24, 32]}
+					borderColor={currentColor}
+					borderWidth={3}
+					fontSize={{ sm: "1.3rem", md: "2rem" }}
 					textAlign="center"
 					onClick={(e) => {
 						e.currentTarget.select();
@@ -37,7 +37,7 @@ const InviteLink = ({ link }: Props) => {
 					value={link}
 				/>
 			</Tooltip>
-			<Text fontSize={32}>Send the link to your friend!</Text>
+			<Text variant="basic">Send the link to your friend!</Text>
 		</PageWrapper>
 	);
 };

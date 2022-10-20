@@ -8,7 +8,7 @@ type Props = {
 
 const PageWrapper = ({ children, column }: Props) => {
 	return (
-		<Flex justifyContent={"center"} alignItems={"center"} flex={1} flexDirection={column ? "column" : "row"} gap={"1rem"}>
+		<Flex justifyContent={"center"} alignItems={"center"} flex={1} flexDirection={column ? "column" : "row"} gap={"1rem"} p={10}>
 			{children}
 		</Flex>
 	);

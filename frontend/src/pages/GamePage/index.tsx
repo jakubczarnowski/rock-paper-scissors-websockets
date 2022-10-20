@@ -1,12 +1,12 @@
-import { Box, Button, Circle, Fade, Flex, Spinner, Text, theme, useColorModeValue, useInterval, useToast } from "@chakra-ui/react";
+import { Box, Button, Circle, Fade, Flex, Spinner, Stack, Text, theme, useColorModeValue, useInterval, useToast } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import Error from "../../components/Error";
 import HandBox from "../../components/HandBox";
-import HandFight from "../../components/HandFight";
-import PaperHand from "../../components/HandSvgs/PaperHand";
-import RockHand from "../../components/HandSvgs/RockHand";
-import ScissorsHand from "../../components/HandSvgs/ScissorsHand";
+import ShowHand from "../../components/ShowHand";
+import PaperHand from "../../components/HandImages/PaperHand";
+import RockHand from "../../components/HandImages/RockHand";
+import ScissorsHand from "../../components/HandImages/ScissorsHand";
 import InviteLink from "../../components/InviteLink";
 import Loading from "../../components/Loading";
 import RoomFull from "../../components/RoomFull";
@@ -21,15 +21,13 @@ type Props = {};
 const GamePage = (props: Props) => {
 	const { id } = useParams<{ id: string }>();
 	const game = useGame(id || "");
-	const handsColor = useColorModeValue(theme.colors.gray[800], theme.colors.white);
-	const toast = useAppToast({
+	useAppToast({
 		title: "Your opponent has requested a rematch!",
 		description: "Click rematch to accept",
 		type: "info",
 		on: game.opponentRequestedRematch,
 		equals: true,
 	});
-
 	const frontendDomain = process.env.REACT_APP_FRONTEND_DOMAIN || "http://localhost:3000/";
 	const inviteLink = frontendDomain + "game/" + (id || "xd");
 	switch (game.roomState) {
@@ -46,39 +44,39 @@ const GamePage = (props: Props) => {
 	}
 	return (
 		<>
-			<Flex flex={1} flexDirection="column" justifyContent="space-between" align="center" pt={{ md: 6 }}>
-				<HandFight opponent isOpponentReady={game.isOpponentReady} playerHand={game.opponentHand} gameResult={game.gameResult} />
+			<Flex flex={1} flexDirection="column" justifyContent="space-between" align="center" pt={{ md: 5 }}>
+				<ShowHand opponent isOpponentReady={game.isOpponentReady} hand={game.opponentHand} gameResult={game.gameResult} />
 				<Flex flex={1} flexDir="column" justifyContent="space-between" align="center" py={4}>
-					<Text fontSize={[12, 16, 20]} fontWeight="bold">
+					<Text variant="basic" fontWeight="bold">
 						{game.opponentScore}
 					</Text>
 
 					<Flex flex="0 0 80px" align="center">
 						<Fade in={game.opponentHand !== Hands.NONE} unmountOnExit>
-							<Button my={4} w={["80px", "100px", "120px"]} border={`2px ${handsColor} solid`} onClick={() => game.requestRematch()}>
-								{game.rematchRequested ? <Spinner speed="0.8s" /> : <Text fontSize={[12, 16]}>Rematch!</Text>}
+							<Button my={4} w={"100px"} border={`2px solid black`} onClick={() => game.requestRematch()}>
+								{game.rematchRequested ? <Spinner /> : <Text>Rematch!</Text>}
 							</Button>
 						</Fade>
 					</Flex>
 
-					<Text fontWeight="bold">{game.playerScore}</Text>
+					<Text variant="basic" fontWeight="bold">
+						{game.playerScore}
+					</Text>
 				</Flex>
 
-				<HandFight playerHand={game.playerHand} gameResult={game.gameResult} />
+				<ShowHand hand={game.playerHand} gameResult={game.gameResult} />
 			</Flex>
-			<Flex flex={0} mb={[2]} mt={[4, 8]} align="center" justify="center">
+			<Flex align="center" justify="center" gap="10px">
 				<HandBox onClick={() => game.setHand(Hands.ROCK)}>
-					<RockHand fill={handsColor} />
+					<RockHand />
 				</HandBox>
 
-				<Flex flex={0} mx={[4, null, 12, 32]}>
-					<HandBox onClick={() => game.setHand(Hands.PAPER)}>
-						<PaperHand fill={handsColor} stroke={handsColor} />
-					</HandBox>
-				</Flex>
+				<HandBox onClick={() => game.setHand(Hands.PAPER)}>
+					<PaperHand />
+				</HandBox>
 
 				<HandBox onClick={() => game.setHand(Hands.SCISSORS)}>
-					<ScissorsHand fill={handsColor} stroke={handsColor} />
+					<ScissorsHand />
 				</HandBox>
 			</Flex>
 		</>

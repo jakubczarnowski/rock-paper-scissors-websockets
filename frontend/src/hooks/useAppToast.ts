@@ -1,4 +1,4 @@
-import { RenderProps, useToast } from "@chakra-ui/react";
+import { RenderProps, theme, useToast } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 
@@ -17,10 +17,12 @@ const useAppToast = ({ on, type, title, description, equals }: Props) => {
 			toast({
 				position: "top",
 				title: title,
+				colorScheme: "yellow",
 				description: description,
 				status: type,
 				duration: 9000,
 				isClosable: true,
+				variant: "main",
 			});
 		} else {
 			toast.closeAll();

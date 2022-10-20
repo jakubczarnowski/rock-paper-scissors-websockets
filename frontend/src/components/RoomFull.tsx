@@ -10,7 +10,7 @@ const RoomFull = (props: Props) => {
 
 	return (
 		<PageWrapper column>
-			<Text fontSize={32}>The room is full!</Text>
+			<Text variant="basic">The room is full!</Text>
 			<Button onClick={() => navigate("/")}>Create Another Game</Button>
 		</PageWrapper>
 	);

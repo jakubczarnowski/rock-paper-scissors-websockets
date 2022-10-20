@@ -9,8 +9,8 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
 	return (
-		<Flex direction="column" minH="100vh" p={[1, 2, 4]}>
-			<Flex justifyContent="flex-end">
+		<Flex direction="column" minH="100vh" p={5}>
+			<Flex ml={"auto"} p={"10px"}>
 				<ColorModeSwitcher />
 			</Flex>
 			{children}
