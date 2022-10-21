@@ -15,12 +15,14 @@ import useAppToast from "../../hooks/useAppToast";
 import useGame from "../../hooks/useGame";
 import GameRoomStates from "../../types/GameRoomStates";
 import Hands from "../../types/Hands";
+import GameState from "../../types/GameState";
 
 type Props = {};
 
 const GamePage = (props: Props) => {
 	const { id } = useParams<{ id: string }>();
 	const game = useGame(id || "");
+	const mainColor = useColorModeValue(theme.colors.black, theme.colors.white);
 	useAppToast({
 		title: "Your opponent has requested a rematch!",
 		description: "Click rematch to accept",
@@ -42,42 +44,77 @@ const GamePage = (props: Props) => {
 		case GameRoomStates.ERROR:
 			return <Error />;
 	}
+	const winMapping: Partial<Record<keyof typeof GameState, string>> = {
+		[GameState.DRAW]: "Draw!",
+		[GameState.WIN]: "You won!",
+		[GameState.LOSE]: "You lost!",
+	};
+
 	return (
 		<>
-			<Flex flex={1} flexDirection="column" justifyContent="space-between" align="center" pt={{ md: 5 }}>
-				<ShowHand opponent isOpponentReady={game.isOpponentReady} hand={game.opponentHand} gameResult={game.gameResult} />
-				<Flex flex={1} flexDir="column" justifyContent="space-between" align="center" py={4}>
-					<Text variant="basic" fontWeight="bold">
-						{game.opponentScore}
-					</Text>
-
-					<Flex flex="0 0 80px" align="center">
-						<Fade in={game.opponentHand !== Hands.NONE} unmountOnExit>
-							<Button my={4} w={"100px"} border={`2px solid black`} onClick={() => game.requestRematch()}>
-								{game.rematchRequested ? <Spinner /> : <Text>Rematch!</Text>}
-							</Button>
-						</Fade>
-					</Flex>
-
+			<Flex justify={"center"} alignItems={"center"} direction="column">
+				<Flex gap={"10px"}>
 					<Text variant="basic" fontWeight="bold">
 						{game.playerScore}
 					</Text>
+					<Text variant="basic" fontWeight="bold">
+						:
+					</Text>
+					<Text variant="basic" fontWeight="bold">
+						{game.opponentScore}
+					</Text>
 				</Flex>
-
-				<ShowHand hand={game.playerHand} gameResult={game.gameResult} />
+				<Flex flex="0 0 80px" align="center">
+					<Fade in={game.opponentHand !== Hands.NONE} unmountOnExit>
+						<Button my={4} w={"100px"} border={`2px solid black`} onClick={() => game.requestRematch()}>
+							{game.rematchRequested ? <Spinner /> : <Text>Rematch!</Text>}
+						</Button>
+					</Fade>
+				</Flex>
 			</Flex>
-			<Flex align="center" justify="center" gap="10px">
-				<HandBox onClick={() => game.setHand(Hands.ROCK)}>
-					<RockHand />
-				</HandBox>
+			<Flex flex={1} flexDirection="row" align="center" justify={"center"} pt={{ md: 5 }} mb={5}>
+				{game.playerHand !== Hands.NONE ? (
+					<Flex width={"30%"} justify={"center"}>
+						<ShowHand hand={game.playerHand} />
+					</Flex>
+				) : (
+					<Flex width={"30%"}>
+						<HandBox onClick={() => game.setHand(Hands.ROCK)}>
+							<RockHand />
+						</HandBox>
+						<HandBox onClick={() => game.setHand(Hands.PAPER)}>
+							<PaperHand />
+						</HandBox>
+						<HandBox onClick={() => game.setHand(Hands.SCISSORS)}>
+							<ScissorsHand />
+						</HandBox>
+					</Flex>
+				)}
 
-				<HandBox onClick={() => game.setHand(Hands.PAPER)}>
-					<PaperHand />
-				</HandBox>
+				{game.isOpponentReady ? (
+					<>
+						<Flex flexDirection="column" align="center">
+							<Text align="center" fontWeight="bold">
+								Opponent made a pick!
+							</Text>
+							{game.gameResult !== GameState.PLAYING && <Text variant="basic">{winMapping[game.gameResult]}</Text>}
+						</Flex>
 
-				<HandBox onClick={() => game.setHand(Hands.SCISSORS)}>
-					<ScissorsHand />
-				</HandBox>
+						<Flex width={"30%"} justify={"center"} sx={{ transform: "scaleX(-1)" }}>
+							<ShowHand hand={game.opponentHand} />
+						</Flex>
+					</>
+				) : (
+					<>
+						<Flex flexDirection="column" align="center">
+							<Spinner speed="1.5s" color={mainColor} />
+							<Text align="center" fontWeight="bold">
+								Opponent's still picking...
+							</Text>
+						</Flex>
+						<Flex width={"30%"} />
+					</>
+				)}
 			</Flex>
 		</>
 	);
