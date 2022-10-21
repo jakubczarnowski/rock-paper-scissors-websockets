@@ -10,6 +10,7 @@ const HandBox = ({ children, onClick }: Props) => {
 	return (
 		<Square
 			maxWidth={"30%"}
+			minWidth={"100px"}
 			onClick={onClick}
 			p={5}
 			cursor="pointer"

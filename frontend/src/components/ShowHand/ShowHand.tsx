@@ -14,7 +14,7 @@ const ShowHand = ({ hand }: Props) => {
 };
 const PlayerHand = ({ hand }: { hand: Hands }) => {
 	return (
-		<Box sx={{ height: "300px" }}>
+		<Box>
 			{hand === Hands.ROCK && <RockHand />}
 			{hand === Hands.PAPER && <PaperHand />}
 			{hand === Hands.SCISSORS && <ScissorsHand />}

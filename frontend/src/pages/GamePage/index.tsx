@@ -78,7 +78,7 @@ const GamePage = (props: Props) => {
 						<ShowHand hand={game.playerHand} />
 					</Flex>
 				) : (
-					<Flex width={"30%"}>
+					<Flex minWidth={"30%"} flexDirection={{ md: "row", base: "column" }}>
 						<HandBox onClick={() => game.setHand(Hands.ROCK)}>
 							<RockHand />
 						</HandBox>
