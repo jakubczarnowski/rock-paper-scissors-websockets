@@ -3,17 +3,16 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 type Props = {
-	on: any;
-	equals: any;
+	shouldOpen: () => boolean;
 	type: "info" | "success" | "warning" | "error";
 	title: string;
 	description: string;
 };
 
-const useAppToast = ({ on, type, title, description, equals }: Props) => {
+const useAppToast = ({ type, title, description, shouldOpen }: Props) => {
 	const toast = useToast();
 	useEffect(() => {
-		if (on === equals) {
+		if (shouldOpen()) {
 			toast({
 				position: "top",
 				title: title,
@@ -27,7 +26,7 @@ const useAppToast = ({ on, type, title, description, equals }: Props) => {
 		} else {
 			toast.closeAll();
 		}
-	}, [on]);
+	}, [shouldOpen]);
 };
 
 export default useAppToast;

@@ -1,3 +1,4 @@
+import { io } from "socket.io-client";
 import GameState from "../types/GameState";
 import Hands from "../types/Hands";
 export const getWinner = (playerHand: Hands, opponentHand: Hands) => {
@@ -22,3 +23,6 @@ export const getWinner = (playerHand: Hands, opponentHand: Hands) => {
 
 	return winningCondition[playerHand]?.[opponentHand] || GameState.DRAW;
 };
+
+const backendDomain = process.env.REACT_APP_BACKEND_DOMAIN || "http://localhost:4000/";
+export const socket = io(backendDomain, { autoConnect: false });

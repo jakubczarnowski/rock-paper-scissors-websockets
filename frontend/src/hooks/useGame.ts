@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import GameRoomStates from "../types/GameRoomStates";
 import GameState from "../types/GameState";
 import Hands from "../types/Hands";
-import { getWinner } from "../utils";
+import { getWinner, socket } from "../utils";
 
-const backendDomain = process.env.REACT_APP_BACKEND_DOMAIN || "http://localhost:4000/";
-console.log(process.env.REACT_APP_BACKEND_DOMAIN);
-const socket = io(backendDomain, { autoConnect: false });
 const useGame = (roomId: string) => {
 	const [roomState, setRoomState] = useState(GameRoomStates.LOADING);
 	const [playerHand, setPlayerHand] = useState(Hands.NONE);
@@ -110,7 +106,6 @@ const useGame = (roomId: string) => {
 		});
 		socket.on("player:playerHand", (hand: Hands) => setPlayerHand(hand));
 		socket.on("player:opponentHand", (hand: Hands) => {
-			console.log("XDDDDDDDD");
 			setOpponentHand(hand);
 		});
 		return () => {
@@ -124,6 +119,7 @@ const useGame = (roomId: string) => {
 			socket.off("server:error");
 			socket.off("player:playerHand");
 			socket.off("player:opponentHand");
+			socket.disconnect();
 		};
 	}, []);
 	return {

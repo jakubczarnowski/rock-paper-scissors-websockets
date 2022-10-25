@@ -1,5 +1,5 @@
 import { Box, Button, Circle, Fade, Flex, Spinner, Stack, Text, theme, useColorModeValue, useInterval, useToast } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useParams } from "react-router";
 import Error from "../../components/Error";
 import HandBox from "../../components/HandBox";
@@ -18,6 +18,7 @@ import Hands from "../../types/Hands";
 import GameState from "../../types/GameState";
 
 type Props = {};
+const frontendDomain = process.env.REACT_APP_FRONTEND_DOMAIN || "http://localhost:3000/";
 
 const GamePage = (props: Props) => {
 	const { id } = useParams<{ id: string }>();
@@ -27,22 +28,10 @@ const GamePage = (props: Props) => {
 		title: "Your opponent has requested a rematch!",
 		description: "Click rematch to accept",
 		type: "info",
-		on: game.opponentRequestedRematch,
-		equals: true,
+		shouldOpen: useCallback(() => game.opponentRequestedRematch, [game.opponentRequestedRematch]),
 	});
-	const frontendDomain = process.env.REACT_APP_FRONTEND_DOMAIN || "http://localhost:3000/";
-	const inviteLink = frontendDomain + "game/" + (id || "xd");
-	switch (game.roomState) {
-		case GameRoomStates.LOADING:
-			return <Loading />;
-		case GameRoomStates.WAITING:
-			return <InviteLink link={inviteLink} />;
-		case GameRoomStates.LEFT:
-			return <UserLeft />;
-		case GameRoomStates.FULL:
-			return <RoomFull />;
-		case GameRoomStates.ERROR:
-			return <Error />;
+	if (game.roomState !== GameRoomStates.PLAYING) {
+		return GameStates(id, game.roomState);
 	}
 	const winMapping: Partial<Record<keyof typeof GameState, string>> = {
 		[GameState.DRAW]: "Draw!",
@@ -119,5 +108,23 @@ const GamePage = (props: Props) => {
 		</>
 	);
 };
+
+function GameStates(id: string | undefined, roomState: GameRoomStates) {
+	const inviteLink = frontendDomain + "game/" + (id || "");
+	switch (roomState) {
+		case GameRoomStates.LOADING:
+			return <Loading />;
+		case GameRoomStates.WAITING:
+			return <InviteLink link={inviteLink} />;
+		case GameRoomStates.LEFT:
+			return <UserLeft />;
+		case GameRoomStates.FULL:
+			return <RoomFull />;
+		case GameRoomStates.ERROR:
+			return <Error />;
+		default:
+			return <>Error has Occured</>;
+	}
+}
 
 export default GamePage;
